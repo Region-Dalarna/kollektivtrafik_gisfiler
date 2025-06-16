@@ -1,0 +1,23 @@
+# 📦 R- och datarelaterade filer – alltid LF
+*.R        text eol=lf
+*.Rmd      text eol=lf
+*.r        text eol=lf
+*.Rproj    text eol=lf
+*.yml      text eol=lf
+*.yaml     text eol=lf
+*.csv      text eol=lf
+*.tsv      text eol=lf
+*.json     text eol=lf
+*.md       text eol=lf
+.gitignore text eol=lf
+
+# 🧪 Batch-skript – behåll Windows-radslut
+*.bat      text eol=crlf
+
+# 🌍 Geodata – behandla .gpkg som binär, ingen diff eller merge
+*.gpkg     binary
+
+# 📁 Specifik regel för att alltid ta remote-versionen vid merge av gpkg i gis-filer/
+gis-filer/*.gpkg merge=theirs
+
+
