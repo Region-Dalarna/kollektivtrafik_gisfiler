@@ -35,6 +35,41 @@ hamta_linjetypskombinationer_att_ta_bort <- function(con, forekommande_kombinati
   ] |> unique()
 }
 
+.kommun_cache <- new.env(parent = emptyenv())
+
+#' Kommuner i Dalarna, hämtade live ur karta.kommun_lm
+#'
+#' Cachas i processen (samma mönster som t.ex. hamta_dim_bransch() i
+#' branscher-appen) så att kommunväljaren inte gör ett nytt DB-anrop
+#' för varje session.
+#'
+#' @param force Hämta om, även om resultatet redan är cachat.
+#'
+#' @return En `tibble` med kommun_kod, kommun_namn, kommun_fil (ascii-
+#'   filnamnsdel), sorterad i svensk bokstavsordning.
+hamta_dalarna_kommuner <- function(force = FALSE) {
+  if (force || is.null(.kommun_cache$df)) {
+    con <- shiny_uppkoppling_las()
+    if (is.null(con)) stop("Kunde inte ansluta till geodatabasen.")
+    on.exit(DBI::dbDisconnect(con), add = TRUE)
+
+    df <- DBI::dbGetQuery(
+      con,
+      "SELECT kommunkod, kommunnamn FROM karta.kommun_lm WHERE lankod = $1",
+      params = list(LAN_KOD_DALARNA)
+    )
+
+    df <- df[stringi::stri_order(df$kommunnamn, locale = "sv_SE"), ]
+
+    .kommun_cache$df <- tibble::tibble(
+      kommun_kod  = as.character(df$kommunkod),
+      kommun_namn = df$kommunnamn,
+      kommun_fil  = stringi::stri_trans_general(df$kommunnamn, "Latin-ASCII")
+    )
+  }
+  .kommun_cache$df
+}
+
 # Läser en kommunpolygon ur karta.kommun_lm. kommun_kod = NULL -> NULL
 # (dvs. ingen avgränsning, används för "Hela Dalarna").
 hamta_kommunpolygon <- function(con, kommun_kod) {

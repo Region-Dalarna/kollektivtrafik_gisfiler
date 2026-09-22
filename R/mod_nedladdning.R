@@ -15,13 +15,7 @@ mod_nedladdning_ui <- function(id) {
           h3("Välj område"),
 
           div(class = "rd-field",
-              selectInput(
-                ns("omrade_val"), "Kommun",
-                choices = c(
-                  "Hela Dalarna" = "",
-                  stats::setNames(DALARNA_KOMMUNER$kommun_kod, DALARNA_KOMMUNER$kommun_namn)
-                )
-              )),
+              selectInput(ns("omrade_val"), "Kommun", choices = NULL)),
 
           downloadButton(ns("ladda_ner"), "Ladda ner gpkg-fil", class = "rd-btn rd-btn--primary"),
 
@@ -53,12 +47,21 @@ mod_nedladdning_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
+    kommuner <- hamta_dalarna_kommuner()
+
+    shiny::observe({
+      updateSelectInput(
+        session, "omrade_val",
+        choices = c("Hela Dalarna" = "", stats::setNames(kommuner$kommun_kod, kommuner$kommun_namn))
+      )
+    })
+
     output$ladda_ner <- downloadHandler(
       filename = function() {
         kommun_namn <- if (identical(input$omrade_val, "")) {
           "Dalarna"
         } else {
-          DALARNA_KOMMUNER$kommun_fil[DALARNA_KOMMUNER$kommun_kod == input$omrade_val]
+          kommuner$kommun_fil[kommuner$kommun_kod == input$omrade_val]
         }
         paste0("Kollektivtrafik_", kommun_namn, ".gpkg")
       },
