@@ -34,9 +34,17 @@ mod_nedladdning_ui <- function(id) {
                 "direkt i GIS-programvaror som ",
                 tags$a(href = "https://www.qgis.org", target = "_blank", "QGIS"), "."),
               tags$ul(
-                tags$li(tags$strong("hallplatslagen"), " – hållplatslägen"),
+                tags$li(
+                  tags$strong("hallplatslagen"), " – de enskilda hållplatslägena, dvs. de ",
+                  "fysiska platserna där bussen stannar (ofta två per hållplats, en på ",
+                  "var sida av vägen för trafik i respektive riktning)"
+                ),
                 tags$li(tags$strong("linjer"), " – busslinjer"),
-                tags$li(tags$strong("hallplatsmitt"), " – hållplatsers mittläge")
+                tags$li(
+                  tags$strong("hallplatsmitt"), " – en punkt mitt emellan en hållplats samtliga ",
+                  "hållplatslägen. Motsvarar oftast två lägen, men för större hållplatser ",
+                  "(t.ex. resecentrum) kan det vara fler"
+                )
               )
           )
       )
