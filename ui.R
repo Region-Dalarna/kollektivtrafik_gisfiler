@@ -2,6 +2,7 @@ source("global.R")
 
 shinyUI(
   fluidPage(
+    title = "Kollektivtrafik - GIS-filer",
     shinyjs::useShinyjs(),
     tags$head(
       tags$link(rel = "icon", type = "image/x-icon", href = "favicon.ico"),
