@@ -1,5 +1,7 @@
 source("global.R")
 
+APP_BESKRIVNING <- "Ladda ned hållplatser och busslinjer för en kommun eller hela Dalarna som en Geopackage-fil, hämtad från Trafiklab varje vecka."
+
 shinyUI(
   fluidPage(
     title = "Kollektivtrafik - GIS-filer",
@@ -19,8 +21,7 @@ shinyUI(
         class  = "rd-header__right",
         href   = "https://www.regiondalarna.se",
         target = "_blank",
-        tags$img(src = "logo_liggande_fri_vit.png", alt = "Region Dalarna"),
-        tags$span("Samhällsanalys")
+        tags$img(src = "logo_liggande_fri_vit.png", alt = "Region Dalarna")
       )
     ),
 
