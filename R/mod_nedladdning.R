@@ -51,6 +51,12 @@ mod_nedladdning_ui <- function(id) {
   )
 }
 
+# Sentinel-värde för "Hela Dalarna". Måste vara icke-tomt -- en
+# selectInput-choice med value = "" behandlas av selectize som en
+# platshållare och försvinner ur listan igen så fort man väljer något
+# annat, vilket gjorde det omöjligt att växla tillbaka till Hela Dalarna.
+HELA_DALARNA_VAL <- "_hela_dalarna_"
+
 mod_nedladdning_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
@@ -60,13 +66,13 @@ mod_nedladdning_server <- function(id) {
     shiny::observe({
       updateSelectInput(
         session, "omrade_val",
-        choices = c("Hela Dalarna" = "", stats::setNames(kommuner$kommun_kod, kommuner$kommun_namn))
+        choices = c("Hela Dalarna" = HELA_DALARNA_VAL, stats::setNames(kommuner$kommun_kod, kommuner$kommun_namn))
       )
     })
 
     output$ladda_ner <- downloadHandler(
       filename = function() {
-        kommun_namn <- if (identical(input$omrade_val, "")) {
+        kommun_namn <- if (identical(input$omrade_val, HELA_DALARNA_VAL)) {
           "Dalarna"
         } else {
           kommuner$kommun_fil[kommuner$kommun_kod == input$omrade_val]
@@ -75,7 +81,7 @@ mod_nedladdning_server <- function(id) {
       },
       contentType = "application/geopackage+sqlite3",
       content = function(file) {
-        kommun_kod <- if (identical(input$omrade_val, "")) NULL else input$omrade_val
+        kommun_kod <- if (identical(input$omrade_val, HELA_DALARNA_VAL)) NULL else input$omrade_val
 
         shiny::withProgress(message = "Skapar gpkg-fil", value = 0, {
           steg <- 0
