@@ -3,10 +3,10 @@
 #  Databasuttag och gpkg-generering för kollektivtrafik-nedladdningen.
 #
 #  Källor (databasen "geodata", kopplas upp med shiny_uppkoppling_las()):
-#   - dalatrafik.vy_hallplatslage_avgangar  -- hållplatslägen (kolumn linjetyper)
-#   - dalatrafik.vy_linjer_avgangar_alla    -- busslinjer (kolumn klassificering)
-#   - dalatrafik.vy_hallplats_avgangar      -- hållplats mittläge (kolumn linjetyper)
-#   - dalatrafik.linjeklassificering        -- alla linjeklassificeringar som finns
+#   - gtfs.vy_hallplatslage_avgangar  -- hållplatslägen (kolumn linjetyper)
+#   - gtfs.vy_linjer_avgangar_alla    -- busslinjer (kolumn klassificering)
+#   - gtfs.vy_hallplats_avgangar      -- hållplats mittläge (kolumn linjetyper)
+#   - gtfs.linjeklassificering        -- alla linjeklassificeringar som finns
 #   - karta.kommun_lm                       -- kommunpolygoner (kolumn kommunkod)
 #
 #  Samma tre lager (hallplatslagen/linjer/hallplatsmitt) och samma
@@ -24,7 +24,7 @@ LINJETYPER_UTESLUT <- c("Stängd skoltrafik", "Flextrafik")
 # rader som enbart består av uteslutna typer ska bort.
 hamta_linjetypskombinationer_att_ta_bort <- function(con, forekommande_kombinationer) {
   alla_klassificeringar <- DBI::dbGetQuery(
-    con, "SELECT DISTINCT klassificering FROM dalatrafik.linjeklassificering"
+    con, "SELECT DISTINCT klassificering FROM gtfs.linjeklassificering"
   )$klassificering
 
   tillatna <- setdiff(alla_klassificeringar, LINJETYPER_UTESLUT)
@@ -105,13 +105,13 @@ bygg_kollektivtrafik_gpkg <- function(kommun_kod = NULL, steg_klar = function(te
   on.exit(DBI::dbDisconnect(con), add = TRUE)
 
   steg_klar("Hämtar hållplatser …")
-  hallplatser_sf <- sf::st_read(con, query = "SELECT * FROM dalatrafik.vy_hallplatslage_avgangar", quiet = TRUE)
+  hallplatser_sf <- sf::st_read(con, query = "SELECT * FROM gtfs.vy_hallplatslage_avgangar", quiet = TRUE)
 
   steg_klar("Hämtar linjer …")
-  linjer_sf <- sf::st_read(con, query = "SELECT * FROM dalatrafik.vy_linjer_avgangar_alla", quiet = TRUE)
+  linjer_sf <- sf::st_read(con, query = "SELECT * FROM gtfs.vy_linjer_avgangar_alla", quiet = TRUE)
 
   steg_klar("Hämtar hållplatsmittpunkter …")
-  hallplats_mitt_sf <- sf::st_read(con, query = "SELECT * FROM dalatrafik.vy_hallplats_avgangar", quiet = TRUE)
+  hallplats_mitt_sf <- sf::st_read(con, query = "SELECT * FROM gtfs.vy_hallplats_avgangar", quiet = TRUE)
 
   steg_klar("Filtrerar linjetyper …")
   ta_bort <- hamta_linjetypskombinationer_att_ta_bort(con, unique(hallplatser_sf$linjetyper))

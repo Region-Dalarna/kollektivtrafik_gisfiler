@@ -6,10 +6,11 @@ library(shinyjs)
 library(DBI)
 library(RPostgres)
 library(sf)
+library(rdshinyappar)
 
 # ---- Delade hjälpfunktioner för Samhällsanalys Shiny-appar -----------------
 # Standardrad för Region Dalarnas Shiny-appar (direkt under library()).
-source("https://raw.githubusercontent.com/Region-Dalarna/funktioner/main/func_shinyappar.R", encoding = "utf-8", echo = FALSE)
+#source("https://raw.githubusercontent.com/Region-Dalarna/funktioner/main/func_shinyappar.R", encoding = "utf-8", echo = FALSE)
 
 telemetry <- skapa_telemetry("kollektivtrafik_gisfiler")
 
