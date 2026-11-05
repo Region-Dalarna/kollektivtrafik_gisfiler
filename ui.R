@@ -2,9 +2,11 @@ source("global.R")
 
 APP_BESKRIVNING <- "Ladda ned hållplatser och busslinjer för en kommun eller hela Dalarna som en Geopackage-fil, hämtad från Trafiklab varje vecka."
 
+APP_TITEL <- "Kollektivtrafik – GIS-filer"
+
 shinyUI(
   fluidPage(
-    title = "Kollektivtrafik - GIS-filer",
+    title = APP_TITEL,  # webbläsarflikens rubrik
     shinyjs::useShinyjs(),
     tags$head(
       tags$link(rel = "icon", type = "image/x-icon", href = "favicon.ico"),
@@ -16,7 +18,7 @@ shinyUI(
     # ---- Header (matchar .rd-header i regiondalarna_ruf.css) --------------
     tags$div(
       class = "rd-header",
-      tags$div(class = "rd-header__title", "Kollektivtrafik – GIS-filer"),
+      tags$div(class = "rd-header__title", APP_TITEL),
       tags$a(
         class  = "rd-header__right",
         href   = "https://www.regiondalarna.se",
