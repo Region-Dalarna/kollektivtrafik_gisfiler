@@ -21,6 +21,6 @@ telemetry <- skapa_telemetry("kollektivtrafik_gisfiler")
 #   R/func_data.R        databasuttag och gpkg-generering (schema dalatrafik/karta, db geodata)
 #   R/mod_nedladdning.R  modul: flik Nedladdning
 
-# Allmänna options - TRUE = visa inte R-felmeddelanden i appen,
-# FALSE = visa felmeddelanden från R på webben
-options(shiny.sanitize.errors = FALSE)
+# Felmeddelanden: på servern visas inga R-fel för användaren (sanitize = TRUE); felet skrivs ändå till appens logg
+# (se Adminportalen, Driftstatus - Loggar). Lokalt i RStudio visas felen i klartext för att underlätta felsökning.
+options(shiny.sanitize.errors = !interactive())
